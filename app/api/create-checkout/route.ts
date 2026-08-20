@@ -15,25 +15,46 @@ export async function POST(request: Request) {
 
     const {
       sessionId
+
     } = await request.json();
+
+
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+
+
+    if(!appUrl){
+
+      throw new Error(
+        "NEXT_PUBLIC_APP_URL is missing"
+      );
+
+    }
+
+
+
 
 
 
     const checkoutSession = await stripe.checkout.sessions.create({
 
 
-      mode: "payment",
+      mode:"payment",
+
+
       customer_creation:"always",
 
 
 
-      line_items: [
+
+      line_items:[
 
         {
 
-          price: "price_1U5RJgJI8l6Pu46gM3fPBlPQ",
+          price:"price_1U5RJgJI8l6Pu46gM3fPBlPQ",
 
-          quantity: 1
+          quantity:1
 
         }
 
@@ -41,51 +62,81 @@ export async function POST(request: Request) {
 
 
 
-      metadata: {
 
-        sessionId: sessionId
+
+      metadata:{
+
+        sessionId
 
       },
 
 
 
+
+
+
       success_url:
 
-`${process.env.NEXT_PUBLIC_APP_URL}/report-success?session_id=${sessionId}`,
+        `${appUrl}/report-success?session_id=${sessionId}`,
 
 
-cancel_url:
 
-process.env.NEXT_PUBLIC_APP_URL
+
+
+      cancel_url:
+
+        appUrl
+
+
 
 
     });
 
 
 
+
+
+
+
     console.log(
+
       "STRIPE CREATED SESSION:",
+
       checkoutSession.id
+
     );
+
+
 
 
 
     console.log(
+
       "STRIPE METADATA:",
+
       checkoutSession.metadata
+
     );
+
+
+
 
 
 
     return NextResponse.json({
 
-      url: checkoutSession.url
+      url:checkoutSession.url
 
     });
 
 
 
-  } catch(error) {
+
+
+
+
+  } catch(error){
+
 
 
     console.error(
@@ -97,11 +148,13 @@ process.env.NEXT_PUBLIC_APP_URL
     );
 
 
+
+
     return NextResponse.json(
 
       {
 
-        error: "Checkout failed"
+        error:"Checkout failed"
 
       },
 

@@ -6,13 +6,14 @@ import RevenueResult from "./RevenueResult";
 
 type ResultData = {
 
-  monthlyLoss:number;
+  monthlyLoss: number;
 
-  yearlyLoss:number;
+  yearlyLoss: number;
 
-  sessionId:string;
+  sessionId: string;
 
 };
+
 
 
 
@@ -31,6 +32,8 @@ export default function CalculatorForm() {
 
 
 
+
+
   async function handleSubmit(
     e: React.FormEvent
   ) {
@@ -40,6 +43,10 @@ export default function CalculatorForm() {
 
 
     setLoading(true);
+
+
+    setResult(null);
+
 
 
 
@@ -52,11 +59,11 @@ export default function CalculatorForm() {
 
         {
 
-          method:"POST",
+          method: "POST",
 
-          headers:{
+          headers: {
 
-            "Content-Type":"application/json"
+            "Content-Type": "application/json"
 
           },
 
@@ -76,36 +83,96 @@ export default function CalculatorForm() {
 
 
 
+
+
       const data = await response.json();
 
 
 
+
+
       console.log(
-        "FULL CALCULATOR RESPONSE:",
+
+        "CALCULATOR RESPONSE:",
+
         data
+
       );
 
 
 
-      setResult({
-
-        monthlyLoss: data.monthlyLoss,
-
-        yearlyLoss: data.yearlyLoss,
-
-        sessionId: data.sessionId
-
-      });
 
 
+      if(!response.ok){
 
-    } catch(error) {
+
+        throw new Error(
+
+          data.error || "Calculation failed"
+
+        );
+
+
+      }
+
+
+
+
+
+
+
+      const formattedResult: ResultData = {
+
+
+        monthlyLoss:
+
+          Number(data.monthlyLoss || 0),
+
+
+
+        yearlyLoss:
+
+          Number(data.yearlyLoss || 0),
+
+
+
+        sessionId:
+
+          data.sessionId || ""
+
+
+      };
+
+
+
+
+
+
+
+      setResult(
+
+        formattedResult
+
+      );
+
+
+
+
+
+
+
+    } catch(error){
+
 
 
       console.error(
-        "Calculation error:",
+
+        "CALCULATOR ERROR:",
+
         error
+
       );
+
 
 
     } finally {
@@ -118,6 +185,10 @@ export default function CalculatorForm() {
 
 
   }
+
+
+
+
 
 
 
@@ -135,15 +206,23 @@ export default function CalculatorForm() {
       >
 
 
+
         <h2>
+
           Calculate your missed call revenue loss
+
         </h2>
 
 
 
+
+
         <label>
+
           Monthly call volume
+
         </label>
+
 
 
         <input
@@ -164,9 +243,15 @@ export default function CalculatorForm() {
 
 
 
+
+
+
         <label>
+
           Percentage of missed calls
+
         </label>
+
 
 
         <input
@@ -187,9 +272,15 @@ export default function CalculatorForm() {
 
 
 
+
+
+
         <label>
+
           Average patient value
+
         </label>
+
 
 
         <input
@@ -210,11 +301,17 @@ export default function CalculatorForm() {
 
 
 
+
+
+
         <p className="hint">
 
           Use first-visit value or estimated lifetime patient value.
 
         </p>
+
+
+
 
 
 
@@ -227,15 +324,26 @@ export default function CalculatorForm() {
         >
 
           {loading
+
             ? "Calculating..."
+
             : "Calculate My Lost Revenue"
+
           }
 
 
         </button>
 
 
+
+
+
       </form>
+
+
+
+
+
 
 
 
@@ -244,21 +352,18 @@ export default function CalculatorForm() {
 
         <RevenueResult
 
-          monthlyLoss={
-            result.monthlyLoss
-          }
+          monthlyLoss={result.monthlyLoss}
 
-          yearlyLoss={
-            result.yearlyLoss
-          }
+          yearlyLoss={result.yearlyLoss}
 
-          sessionId={
-            result.sessionId
-          }
+          sessionId={result.sessionId}
 
         />
 
       )}
+
+
+
 
 
 

@@ -1,5 +1,13 @@
+"use client";
+
+
+import { useEffect } from "react";
+
 import ReportOffer from "./ReportOffer";
+
 import EmailCapture from "./EmailCapture";
+
+
 
 
 type RevenueResultProps = {
@@ -14,6 +22,23 @@ type RevenueResultProps = {
 
 
 
+
+declare global {
+
+  interface Window {
+
+    fbq?: (...args:any[]) => void;
+
+    gtag?: (...args:any[]) => void;
+
+  }
+
+}
+
+
+
+
+
 export default function RevenueResult({
 
   monthlyLoss,
@@ -22,7 +47,103 @@ export default function RevenueResult({
 
   sessionId
 
-}: RevenueResultProps) {
+}: RevenueResultProps) { console.log(
+  "🔥 REVENUE RESULT RENDERED",
+  {
+    monthlyLoss,
+    yearlyLoss,
+    sessionId
+  }
+);
+
+
+
+  useEffect(() => {
+
+
+    console.log(
+      "Revenue result displayed"
+    );
+
+
+
+    // META PIXEL
+
+    if(window.fbq){
+
+
+      window.fbq(
+
+        "trackCustom",
+
+        "calculator_completed",
+
+        {
+
+          monthly_loss: monthlyLoss,
+
+          yearly_loss: yearlyLoss
+
+        }
+
+      );
+
+
+      console.log(
+        "Meta calculator_completed fired"
+      );
+
+
+    }
+
+
+
+
+
+    // GOOGLE ADS
+
+    if(window.gtag){
+
+
+      window.gtag(
+
+        "event",
+
+        "calculator_completed",
+
+        {
+
+          monthly_loss: monthlyLoss,
+
+          yearly_loss: yearlyLoss
+
+        }
+
+      );
+
+
+      console.log(
+        "Google calculator_completed fired"
+      );
+
+
+    }
+
+
+
+  }, [
+
+    monthlyLoss,
+
+    yearlyLoss,
+
+    sessionId
+
+  ]);
+
+
+
+
 
 
 
@@ -62,6 +183,7 @@ export default function RevenueResult({
 
 
 
+
       <EmailCapture
 
         result={{
@@ -79,11 +201,13 @@ export default function RevenueResult({
 
 
 
+
       <ReportOffer
 
         sessionId={sessionId}
 
       />
+
 
 
     </section>
