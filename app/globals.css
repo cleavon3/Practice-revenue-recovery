@@ -1,0 +1,487 @@
+@import "tailwindcss";
+
+
+:root {
+
+  --primary: #0B6E8E;
+
+  --background: #ffffff;
+
+  --text: #123047;
+
+  --light-background: #E8F5F8;
+
+  --border: #dce8ed;
+
+}
+
+
+* {
+
+  box-sizing: border-box;
+
+}
+
+
+body {
+
+  margin: 0;
+
+  background: var(--background);
+
+  color: var(--text);
+
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+
+
+
+/* =====================
+   LAYOUT
+===================== */
+
+
+main {
+
+  min-height: 100vh;
+
+  padding: 50px 20px;
+
+}
+
+
+.container {
+
+  max-width: 650px;
+
+  margin: 0 auto;
+
+}
+
+
+
+/* =====================
+   HEADER
+===================== */
+
+
+header {
+
+  text-align: center;
+
+  margin-bottom: 40px;
+
+}
+
+
+.brand {
+
+  color: var(--primary);
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  margin-bottom: 20px;
+
+}
+
+
+
+/* =====================
+   TYPOGRAPHY
+===================== */
+
+
+h1 {
+
+  font-size: 42px;
+
+  line-height: 1.15;
+
+  margin-bottom: 20px;
+
+}
+
+
+h2 {
+
+  margin-bottom: 15px;
+
+}
+
+
+p {
+
+  font-size: 18px;
+
+  line-height: 1.6;
+
+}
+
+
+
+/* =====================
+   CALCULATOR
+===================== */
+
+
+.calculator {
+
+  background: #ffffff;
+
+  padding: 30px;
+
+  border-radius: 16px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+}
+
+
+label {
+
+  display: block;
+
+  font-weight: 600;
+
+  margin-top: 20px;
+
+}
+
+
+input {
+
+  width: 100%;
+
+  padding: 15px;
+
+  margin-top: 8px;
+
+  border: 1px solid #ccd9df;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+
+}
+
+
+.hint {
+
+  font-size: 14px;
+
+  color: #667;
+
+}
+
+
+
+/* =====================
+   BUTTONS
+===================== */
+
+
+button {
+
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 16px;
+
+  background: var(--primary);
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+}
+
+
+button:hover {
+
+  opacity: 0.9;
+
+}
+
+
+
+/* =====================
+   REVENUE RESULT
+===================== */
+
+
+.result {
+
+  margin-top: 30px;
+
+  padding: 30px;
+
+  border-radius: 16px;
+
+  background: var(--light-background);
+
+}
+
+
+.result h3 {
+
+  font-size: 36px;
+
+  color: var(--primary);
+
+}
+
+
+
+/* =====================
+   EMAIL CAPTURE
+===================== */
+
+
+.email-capture {
+
+  margin-top: 30px;
+
+  padding: 25px;
+
+  background: #ffffff;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+}
+
+
+.email-capture h3 {
+
+  margin-top: 0;
+
+}
+
+
+.email-capture input {
+
+  margin-bottom: 15px;
+
+}
+
+
+.email-capture button {
+
+  margin-top: 10px;
+
+}
+
+
+
+/* =====================
+   REPORT OFFER
+===================== */
+
+
+.offer {
+
+  margin-top: 30px;
+
+  padding: 30px;
+
+  background: #ffffff;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+}
+
+
+
+/* =====================
+   REPORT SUCCESS PAGE
+===================== */
+
+
+.report-success {
+
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+}
+
+
+
+.success-badge {
+
+  display: inline-block;
+
+  background: var(--light-background);
+
+  color: var(--primary);
+
+  padding: 8px 16px;
+
+  border-radius: 20px;
+
+  font-weight: 700;
+
+  margin-bottom: 25px;
+
+}
+
+
+
+.subtitle {
+
+  margin-bottom: 30px;
+
+}
+
+
+
+.report-box {
+
+  background: var(--light-background);
+
+  padding: 25px;
+
+  border-radius: 16px;
+
+  margin-top: 25px;
+
+}
+
+
+
+.cta-box {
+
+  margin-top: 30px;
+
+  padding: 25px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+}
+
+
+
+/* =====================
+   CALENDLY BUTTON LINK
+===================== */
+
+
+.button-link {
+
+  display: block;
+
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 16px;
+
+  background: var(--primary);
+
+  color: white;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  text-align: center;
+
+  text-decoration: none;
+
+}
+
+
+.button-link:hover {
+
+  opacity: 0.9;
+
+}
+
+
+
+/* =====================
+   LISTS
+===================== */
+
+
+ul {
+
+  padding-left: 20px;
+
+}
+
+
+li {
+
+  margin-bottom: 12px;
+
+  font-size: 17px;
+
+}
+
+
+
+small {
+
+  color: #667;
+
+}
+
+
+
+/* =====================
+   MOBILE
+===================== */
+
+
+@media(max-width:600px) {
+
+
+  h1 {
+
+    font-size: 32px;
+
+  }
+
+
+  main {
+
+    padding: 30px 15px;
+
+  }
+
+
+  .calculator,
+  .result,
+  .offer,
+  .report-success {
+
+    padding: 25px;
+
+  }
+
+
+}
