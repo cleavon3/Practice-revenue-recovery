@@ -50,6 +50,50 @@ export default function ReportSuccessPage(){
 
 
 
+    if(!id){
+
+      console.log(
+
+        "❌ NO SESSION ID — SKIPPING TRACKING"
+
+      );
+
+      return;
+
+    }
+
+
+
+
+    // DUPLICATE-FIRE GUARD — prevents double-counting the same
+    // purchase if the page reloads or Stripe redirects twice
+    const alreadyTracked = sessionStorage.getItem(
+
+      `purchase_tracked_${id}`
+
+    );
+
+
+
+    if(alreadyTracked){
+
+
+      console.log(
+
+        "⏭️ PURCHASE ALREADY TRACKED FOR THIS SESSION"
+
+      );
+
+
+
+      return;
+
+
+    }
+
+
+
+
 
 
 
@@ -77,6 +121,12 @@ export default function ReportSuccessPage(){
           value:17.00,
 
           currency:"USD"
+
+        },
+
+        {
+
+          eventID: id
 
         }
 
@@ -131,7 +181,11 @@ export default function ReportSuccessPage(){
           value:17.00,
 
 
-          currency:"USD"
+          currency:"USD",
+
+
+          transaction_id: id
+
 
         }
 
@@ -153,7 +207,21 @@ export default function ReportSuccessPage(){
 
 
 
+
+
+    sessionStorage.setItem(
+
+      `purchase_tracked_${id}`,
+
+      "true"
+
+    );
+
+
+
+
   },[]);
+
 
 
 
