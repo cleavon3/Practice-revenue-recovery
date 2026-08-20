@@ -51,13 +51,12 @@ export async function POST(request: Request) {
 
       success_url:
 
-        `http://localhost:3000/report-success?session_id=${sessionId}`,
+`${process.env.NEXT_PUBLIC_APP_URL}/report-success?session_id=${sessionId}`,
 
 
+cancel_url:
 
-      cancel_url:
-
-        "http://localhost:3000"
+process.env.NEXT_PUBLIC_APP_URL
 
 
     });
