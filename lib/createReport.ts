@@ -1,8 +1,5 @@
 import { pdf } from "@react-pdf/renderer";
-import fs from "fs/promises";
-import path from "path";
 import RevenueReportPDF from "@/components/RevenueReportPDF";
-
 
 
 export async function createReport({
@@ -31,100 +28,41 @@ export async function createReport({
 
 
 
-    const buffer = await pdf(
-
-      document
-
-    ).toBuffer();
+    const stream = await pdf(document).toBuffer();
 
 
 
-
-
-    const fileName =
-
-      `report-${sessionId}.pdf`;
+    const chunks:any[] = [];
 
 
 
+    for await (const chunk of stream as any) {
 
+      chunks.push(chunk);
 
-    const reportsFolder = path.join(
-
-      process.cwd(),
-
-      "public",
-
-      "reports"
-
-    );
+    }
 
 
 
-
-
-    await fs.mkdir(
-
-      reportsFolder,
-
-      {
-
-        recursive:true
-
-      }
-
-    );
-
-
-
-
-
-    const filePath = path.join(
-
-      reportsFolder,
-
-      fileName
-
-    );
-
-
-
-
-
-    await fs.writeFile(
-
-      filePath,
-
-      buffer
-
-    );
-
-
-
-
-
-    const reportUrl =
-
-      `/reports/${fileName}`;
-
-
+    const pdfBuffer = Buffer.concat(chunks);
 
 
 
     console.log(
 
-      "PDF REPORT CREATED:",
+      "PDF BUFFER CREATED:",
 
-      reportUrl
+      pdfBuffer.length
 
     );
 
 
 
+    return {
 
+      pdfBuffer
 
-    return reportUrl;
-
+    };
 
 
   } catch(error) {

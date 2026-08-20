@@ -8,204 +8,213 @@ import { sendReportEmail } from "@/lib/sendReportEmail";
 
 
 
-export async function POST(request: Request) {
+export async function POST(request:Request){
 
 
-  const body = await request.text();
+const body = await request.text();
 
 
-  const signature = request.headers.get(
-    "stripe-signature"
-  );
+const signature = request.headers.get(
+"stripe-signature"
+);
 
 
 
-  if (!signature) {
+if(!signature){
 
+return NextResponse.json(
+{
+error:"Missing signature"
+},
+{
+status:400
+}
+);
 
-    return NextResponse.json(
+}
 
-      {
-        error:"Missing Stripe signature"
-      },
 
-      {
-        status:400
-      }
 
-    );
+let event:Stripe.Event;
 
-  }
 
 
+try{
 
 
+event = stripe.webhooks.constructEvent(
 
-  let event: Stripe.Event;
+body,
 
+signature,
 
+process.env.STRIPE_WEBHOOK_SECRET!
 
-  try {
+);
 
 
-    event = stripe.webhooks.constructEvent(
+}
 
-      body,
+catch(error){
 
-      signature,
 
-      process.env.STRIPE_WEBHOOK_SECRET!
+console.error(
+"WEBHOOK ERROR:",
+error
+);
 
-    );
 
+return NextResponse.json(
+{
+error:"Invalid webhook"
+},
+{
+status:400
+}
+);
 
-  } catch(error) {
 
+}
 
-    console.error(
 
-      "WEBHOOK SIGNATURE ERROR:",
 
-      error
 
-    );
 
 
-    return NextResponse.json(
+if(event.type !== "checkout.session.completed"){
 
-      {
-        error:"Invalid webhook"
-      },
 
-      {
-        status:400
-      }
+return NextResponse.json({
 
-    );
+received:true
 
+});
 
-  }
 
+}
 
 
 
 
 
 
-  if(event.type !== "checkout.session.completed"){
 
+const session =
 
-    return NextResponse.json({
+event.data.object as Stripe.Checkout.Session;
 
-      received:true
 
-    });
 
 
-  }
 
+const sessionId =
 
+session.metadata?.sessionId;
 
 
 
 
+const customerEmail =
 
-  const session =
+session.customer_details?.email ||
 
-    event.data.object as Stripe.Checkout.Session;
+session.customer_email ||
 
+null;
 
 
 
 
-  console.log(
 
-    "CHECKOUT SESSION:",
+console.log(
 
-    session.id
+"SESSION ID:",
 
-  );
+sessionId
 
+);
 
 
-  console.log(
 
-    "SESSION METADATA:",
+console.log(
 
-    session.metadata
+"CUSTOMER EMAIL:",
 
-  );
+customerEmail
 
+);
 
 
 
 
 
 
-  const sessionId =
 
-    session.metadata?.sessionId;
 
+if(!sessionId){
 
 
+return NextResponse.json({
 
+received:true
 
-  const customerEmail =
+});
 
-    session.customer_details?.email ||
 
-    session.customer_email ||
+}
 
-    null;
 
 
 
 
 
-  console.log(
 
-    "SESSION ID:",
 
-    sessionId
+const {
 
-  );
+data:lead,
 
+error:leadError
 
+}=await supabaseAdmin
 
-  console.log(
+.from("leads")
 
-    "CUSTOMER EMAIL:",
+.select("*")
 
-    customerEmail
+.eq(
 
-  );
+"session_id",
 
+sessionId
 
+)
 
+.single();
 
 
 
 
-  if(!sessionId){
 
 
-    console.error(
 
-      "NO SESSION ID FOUND"
+console.log(
 
-    );
+"LEAD:",
 
+lead
 
-    return NextResponse.json({
+);
 
-      received:true
 
-    });
 
+console.log(
 
-  }
+"LEAD ERROR:",
 
+leadError
 
+);
 
 
 
@@ -213,232 +222,152 @@ export async function POST(request: Request) {
 
 
 
-  const {
+if(leadError || !lead){
 
-    data:lead,
 
-    error:leadError
+return NextResponse.json({
 
-  } = await supabaseAdmin
+received:true
 
-    .from("leads")
+});
 
-    .select("*")
 
-    .eq(
+}
 
-      "session_id",
 
-      sessionId
 
-    )
 
-    .single();
 
 
 
 
 
+const {
 
+pdfBuffer
 
-  console.log(
+}=await createReport({
 
-    "LEAD FOUND:",
+sessionId,
 
-    lead
+lead
 
-  );
+});
 
 
 
-  console.log(
 
-    "LEAD ERROR:",
 
-    leadError
 
-  );
 
+console.log(
 
+"PDF CREATED:",
 
+pdfBuffer.length
 
+);
 
 
 
-  if(leadError || !lead){
 
 
-    console.error(
 
-      "LEAD NOT FOUND"
 
-    );
 
 
-    return NextResponse.json({
+await supabaseAdmin
 
-      received:true
+.from("leads")
 
-    });
+.update({
 
+report_purchased:true,
 
-  }
+report_generated:true,
 
+email:customerEmail,
 
+email_captured:
 
+customerEmail ? true:false,
 
+report_generated_at:
 
+new Date().toISOString()
 
+})
 
+.eq(
 
+"session_id",
 
-  // CREATE PDF
+sessionId
 
-  const {
+);
 
-    pdfBuffer
 
-  } = await createReport({
 
-    lead
 
-  });
 
 
 
 
 
+if(customerEmail){
 
 
-  console.log(
 
-    "PDF CREATED"
+await sendReportEmail({
 
-  );
+email:customerEmail,
 
+monthlyLoss:
 
+lead.lost_revenue_monthly,
 
+yearlyLoss:
 
+lead.lost_revenue_yearly,
 
+pdfBuffer
 
+});
 
 
 
-  // UPDATE LEAD
+console.log(
 
-  const {
+"EMAIL SENT"
 
-    error:updateError
+);
 
-  } = await supabaseAdmin
 
-    .from("leads")
+}
 
-    .update({
+else{
 
-      report_purchased:true,
 
-      report_generated:true,
+console.log(
 
-      email:
+"NO EMAIL"
 
-        customerEmail,
+);
 
-      email_captured:
 
-        customerEmail ? true : false,
+}
 
-      report_generated_at:
 
-        new Date().toISOString()
 
-    })
 
-    .eq(
 
-      "session_id",
 
-      sessionId
 
-    );
+return NextResponse.json({
 
+received:true
 
-
-
-
-
-
-  console.log(
-
-    "DATABASE UPDATE ERROR:",
-
-    updateError
-
-  );
-
-
-
-
-
-
-
-
-
-  // SEND EMAIL
-
-  if(customerEmail){
-
-
-    await sendReportEmail({
-
-      email:customerEmail,
-
-      monthlyLoss:
-
-        lead.lost_revenue_monthly,
-
-      yearlyLoss:
-
-        lead.lost_revenue_yearly,
-
-      pdfBuffer
-
-    });
-
-
-
-    console.log(
-
-      "REPORT EMAIL SENT"
-
-    );
-
-
-  }
-
-  else{
-
-
-    console.log(
-
-      "NO CUSTOMER EMAIL AVAILABLE"
-
-    );
-
-
-  }
-
-
-
-
-
-
-
-  return NextResponse.json({
-
-    received:true
-
-  });
+});
 
 
 }

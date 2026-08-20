@@ -8,15 +8,15 @@ export async function GET() {
   try {
 
 
-    const reportUrl = await createReport({
+    const result = await createReport({
 
-      sessionId: "test-12345",
+      sessionId:"test-12345",
 
-      lead: {
+      lead:{
 
-        lost_revenue_monthly: 7000,
+        lost_revenue_monthly:7000,
 
-        lost_revenue_yearly: 84000
+        lost_revenue_yearly:84000
 
       }
 
@@ -25,8 +25,11 @@ export async function GET() {
 
 
     console.log(
-      "TEST PDF CREATED:",
-      reportUrl
+
+      "CREATE REPORT RESULT:",
+
+      result
+
     );
 
 
@@ -35,31 +38,44 @@ export async function GET() {
 
       success:true,
 
-      reportUrl
+      resultType:typeof result,
+
+      result
 
     });
+
 
 
   } catch(error) {
 
 
     console.error(
+
       "PDF TEST ERROR:",
+
       error
+
     );
 
 
-    return NextResponse.json({
 
-      success:false,
+    return NextResponse.json(
 
-      error:String(error)
+      {
 
-    },
+        success:false,
 
-    {
-      status:500
-    });
+        error:String(error)
+
+      },
+
+      {
+
+        status:500
+
+      }
+
+    );
 
 
   }
