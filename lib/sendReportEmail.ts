@@ -1,42 +1,28 @@
-import fs from "fs/promises";
-
-
 export async function sendReportEmail({
 
   email,
-
-  reportUrl,
 
   monthlyLoss,
 
   yearlyLoss,
 
-  pdfPath
-
+  pdfBuffer
 
 }: {
 
   email:string;
 
-  reportUrl:string;
-
   monthlyLoss:number;
 
   yearlyLoss:number;
 
-  pdfPath:string;
+  pdfBuffer: Buffer;
 
 
 }) {
 
 
-  // Read PDF file
-
-  const pdfBuffer = await fs.readFile(pdfPath);
-
-
   const pdfBase64 = pdfBuffer.toString("base64");
-
 
 
 
@@ -50,23 +36,35 @@ export async function sendReportEmail({
 
       headers:{
 
+
         "accept":"application/json",
 
-        "api-key": process.env.BREVO_API_KEY!,
 
-        "content-type":"application/json"
+        "api-key":
+
+          process.env.BREVO_API_KEY!,
+
+
+        "content-type":
+
+          "application/json"
+
 
       },
 
 
-      body: JSON.stringify({
+      body:JSON.stringify({
 
 
         sender:{
 
+
           name:
 
-            process.env.BREVO_SENDER_NAME || "Cleavon Digital",
+            process.env.BREVO_SENDER_NAME ||
+
+            "Cleavon Digital",
+
 
 
           email:
@@ -99,72 +97,107 @@ export async function sendReportEmail({
         htmlContent:`
 
 
-        <div style="font-family:Arial;padding:30px">
-
-
-        <h2>
-        Your Revenue Recovery Report Is Ready
-        </h2>
-
-
-
-        <p>
-        Your personalised revenue recovery analysis is complete.
-        </p>
-
-
-
-        <h2>
-        Monthly Opportunity:
-        $${monthlyLoss.toLocaleString()}
-        </h2>
-
-
-
-        <h2>
-        Annual Opportunity:
-        $${yearlyLoss.toLocaleString()}
-        </h2>
-
-
-
-
-        <p>
-        Your complete report is attached to this email.
-        </p>
-
-
-
-
-        <a
-
-        href="http://localhost:3000${reportUrl}"
+        <div
 
         style="
-        display:inline-block;
-        padding:12px 20px;
-        background:#111;
-        color:white;
-        text-decoration:none;
-        border-radius:6px;
+
+        font-family:Arial;
+
+        padding:30px;
+
         "
 
         >
 
-        View Online Report
-
-        </a>
 
 
+        <h2>
+
+        Your Revenue Recovery Report Is Ready
+
+        </h2>
 
 
-        <p style="margin-top:30px">
+
+
+        <p>
+
+        Your personalised missed-call revenue
+
+        recovery analysis has been completed.
+
+        </p>
+
+
+
+
+        <h2>
+
+        Monthly Opportunity:
+
+        $${monthlyLoss.toLocaleString()}
+
+        </h2>
+
+
+
+
+        <h2>
+
+        Annual Opportunity:
+
+        $${yearlyLoss.toLocaleString()}
+
+        </h2>
+
+
+
+
+        <p>
+
+        Your complete PDF report is attached.
+
+        </p>
+
+
+
+
+        <p>
 
         Ready to recover missed revenue?
 
         Book your AI Receptionist Strategy Call.
 
         </p>
+
+
+
+        <a
+
+        href="https://calendly.com/cleavondigital/marketing-ai-growth-strategy-session"
+
+        style="
+
+        display:inline-block;
+
+        padding:12px 20px;
+
+        background:#111827;
+
+        color:white;
+
+        text-decoration:none;
+
+        border-radius:6px;
+
+        "
+
+        >
+
+        Book Strategy Call
+
+        </a>
+
 
 
 
@@ -177,20 +210,30 @@ export async function sendReportEmail({
 
         attachment:[
 
+
           {
 
-            content:pdfBase64,
+            content:
 
-            name:"Missed-Call-Revenue-Recovery-Report.pdf"
+              pdfBase64,
+
+
+            name:
+
+              "Missed-Call-Revenue-Recovery-Report.pdf"
+
 
           }
+
 
         ]
 
 
       })
 
+
     }
+
 
   );
 
@@ -201,25 +244,18 @@ export async function sendReportEmail({
   if(!response.ok){
 
 
-    const error = await response.text();
+    const errorText = await response.text();
 
-
-    console.error(
-
-      "BREVO STATUS:",
-
-      response.status
-
-    );
 
 
     console.error(
 
-      "BREVO ERROR RESPONSE:",
+      "BREVO ERROR:",
 
-      error
+      errorText
 
     );
+
 
 
     throw new Error(
@@ -241,7 +277,7 @@ export async function sendReportEmail({
 
   console.log(
 
-    "BREVO EMAIL SUCCESS:",
+    "BREVO EMAIL SENT:",
 
     result
 
