@@ -1,72 +1,49 @@
-import { Suspense } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 
 
-type Props = {
+export default function ReportSuccessPage(){
 
-  searchParams: Promise<{
 
-    session_id?: string;
-
-  }>;
-
-};
+const [sessionId,setSessionId] = useState("");
 
 
 
-export default async function ReportSuccessPage({
-
-  searchParams
-
-}: Props) {
+useEffect(()=>{
 
 
-  const params = await searchParams;
+const params = new URLSearchParams(
+
+window.location.search
+
+);
 
 
-  const sessionId = params.session_id || "";
+const id = params.get("session_id");
 
 
-
-  return (
-
-    <Suspense>
-
-      <ReportSuccessContent sessionId={sessionId} />
-
-    </Suspense>
-
-  );
+setSessionId(id || "");
 
 
-}
+},[]);
 
 
 
 
 
-
-
-function ReportSuccessContent({
-
-sessionId
-
-}:{
-
-sessionId:string;
-
-}) {
 
 
 
 async function handleBookingClick(){
 
 
-"use server";
+try{
 
 
 await fetch(
 
-`${process.env.NEXT_PUBLIC_APP_URL}/api/track-booking`,
+"/api/track-booking",
 
 {
 
@@ -88,6 +65,33 @@ sessionId
 
 );
 
+
+}
+
+catch(error){
+
+
+console.error(
+
+"Booking tracking error:",
+
+error
+
+);
+
+
+}
+
+
+
+
+window.open(
+
+"https://calendly.com/cleavondigital/marketing-ai-growth-strategy-session",
+
+"_blank"
+
+);
 
 
 }
@@ -135,6 +139,8 @@ Review the opportunities your practice may be missing
 and the actions you can take to recover them.
 
 </p>
+
+
 
 
 
@@ -188,6 +194,8 @@ AI receptionist opportunity assessment
 
 
 
+
+
 <div className="cta-box">
 
 
@@ -211,10 +219,10 @@ and convert more opportunities.
 
 
 
-<form action={handleBookingClick}>
-
 
 <button
+
+onClick={handleBookingClick}
 
 className="button-link"
 
@@ -225,11 +233,10 @@ Book Your Free Call
 </button>
 
 
-</form>
-
 
 
 </div>
+
 
 
 
