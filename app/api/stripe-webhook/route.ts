@@ -320,14 +320,10 @@ export async function POST(request: Request) {
 
 
       const pdfPath = path.join(
-
-        process.cwd(),
-
-        "public",
-
-        reportUrl
-
-      );
+  process.cwd(),
+  "public",
+  reportUrl.replace("/", "")
+);
 
 
 
