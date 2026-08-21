@@ -20,7 +20,29 @@ export async function POST(request: Request) {
 
 
 
+
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+    const priceId = process.env.STRIPE_PRICE_ID;
+
+
+
+
+
+    console.log(
+      "PRICE ID FROM ENV:",
+      priceId
+    );
+
+
+
+    console.log(
+      "APP URL:",
+      appUrl
+    );
+
+
 
 
 
@@ -35,6 +57,19 @@ export async function POST(request: Request) {
 
 
 
+    if(!priceId){
+
+      throw new Error(
+        "STRIPE_PRICE_ID is missing"
+      );
+
+    }
+
+
+
+
+
+
 
 
     const checkoutSession = await stripe.checkout.sessions.create({
@@ -43,7 +78,9 @@ export async function POST(request: Request) {
       mode:"payment",
 
 
+
       customer_creation:"always",
+
 
 
 
@@ -52,7 +89,7 @@ export async function POST(request: Request) {
 
         {
 
-          price:"price_1U5RJgJI8l6Pu46gM3fPBlPQ",
+          price: priceId,
 
           quantity:1
 
@@ -66,7 +103,9 @@ export async function POST(request: Request) {
 
       metadata:{
 
-        sessionId
+
+        sessionId: sessionId || ""
+
 
       },
 
@@ -90,7 +129,10 @@ export async function POST(request: Request) {
 
 
 
+
     });
+
+
 
 
 
@@ -125,7 +167,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
 
-      url:checkoutSession.url
+      url: checkoutSession.url
 
     });
 
@@ -135,13 +177,23 @@ export async function POST(request: Request) {
 
 
 
-  } catch(error){
+  } catch(error:any){
 
 
 
     console.error(
 
-      "Checkout error:",
+      "CHECKOUT ERROR MESSAGE:",
+
+      error?.message
+
+    );
+
+
+
+    console.error(
+
+      "CHECKOUT ERROR FULL:",
 
       error
 
@@ -150,11 +202,14 @@ export async function POST(request: Request) {
 
 
 
+
     return NextResponse.json(
 
       {
 
-        error:"Checkout failed"
+        error:"Checkout failed",
+
+        message:error?.message
 
       },
 
