@@ -161,6 +161,33 @@ export default function ReportOffer({
 
 
 
+
+      <div className="trust-line">
+
+
+        <strong>
+          Prepared by Cleavon A.
+        </strong>
+
+
+        <br />
+
+
+        Founder, Skill Digital Solutions
+
+
+        <br />
+
+
+        Helping dental practices recover lost patient revenue through AI-powered call handling systems.
+
+
+      </div>
+
+
+
+
+
       <button
 
         onClick={handleCheckout}
