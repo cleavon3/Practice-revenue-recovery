@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 
 export default function EmailCapture({
@@ -27,10 +27,15 @@ export default function EmailCapture({
   const [message, setMessage] = useState("");
 
 
+  const offerRef = useRef<HTMLDivElement>(null);
+
+
+
 
   async function handleSubmit(
     e: React.FormEvent
   ) {
+
 
     e.preventDefault();
 
@@ -86,6 +91,21 @@ export default function EmailCapture({
         );
 
 
+
+        setTimeout(() => {
+
+          offerRef.current?.scrollIntoView({
+
+            behavior:"smooth",
+
+            block:"start"
+
+          });
+
+        },300);
+
+
+
       } else {
 
 
@@ -115,14 +135,17 @@ export default function EmailCapture({
 
 
 
+
   return (
 
     <section className="email-capture">
 
 
+
       <h3>
         Want this estimate sent to your inbox?
       </h3>
+
 
 
       <p>
@@ -131,7 +154,9 @@ export default function EmailCapture({
 
 
 
+
       <form onSubmit={handleSubmit}>
+
 
 
         <input
@@ -152,6 +177,8 @@ export default function EmailCapture({
 
 
 
+
+
         <button type="submit">
 
           Send My Free Snapshot
@@ -159,7 +186,11 @@ export default function EmailCapture({
         </button>
 
 
+
+
       </form>
+
+
 
 
 
@@ -172,6 +203,12 @@ export default function EmailCapture({
         </p>
 
       )}
+
+
+
+
+      <div ref={offerRef} />
+
 
 
     </section>

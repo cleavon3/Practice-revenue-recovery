@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import RevenueResult from "./RevenueResult";
 
 
@@ -30,6 +30,10 @@ export default function CalculatorForm() {
   const [result, setResult] = useState<ResultData | null>(null);
 
   const [loading, setLoading] = useState(false);
+
+
+  const resultRef = useRef<HTMLDivElement>(null);
+
 
 
 
@@ -99,6 +103,7 @@ export default function CalculatorForm() {
 
 
 
+
       setResult({
 
         monthlyLoss: data.monthlyLoss,
@@ -108,6 +113,24 @@ export default function CalculatorForm() {
         sessionId: data.sessionId
 
       });
+
+
+
+
+
+      setTimeout(() => {
+
+        resultRef.current?.scrollIntoView({
+
+          behavior:"smooth",
+
+          block:"start"
+
+        });
+
+      },100);
+
+
 
 
 
@@ -137,6 +160,7 @@ export default function CalculatorForm() {
 
 
 
+
   return (
 
     <>
@@ -158,9 +182,11 @@ export default function CalculatorForm() {
 
 
 
+
         <label>
           Dental Practice Name *
         </label>
+
 
 
         <input
@@ -184,9 +210,11 @@ export default function CalculatorForm() {
 
 
 
+
         <label>
           Monthly call volume
         </label>
+
 
 
         <input
@@ -209,9 +237,12 @@ export default function CalculatorForm() {
 
 
 
+
+
         <label>
           Percentage of missed calls
         </label>
+
 
 
         <input
@@ -234,9 +265,12 @@ export default function CalculatorForm() {
 
 
 
+
+
         <label>
           Average patient value
         </label>
+
 
 
         <input
@@ -259,11 +293,15 @@ export default function CalculatorForm() {
 
 
 
+
+
         <p className="hint">
 
           Use first-visit value or estimated lifetime patient value.
 
         </p>
+
+
 
 
 
@@ -290,7 +328,12 @@ export default function CalculatorForm() {
 
 
 
+
+
       </form>
+
+
+
 
 
 
@@ -298,17 +341,27 @@ export default function CalculatorForm() {
 
       {result && (
 
-        <RevenueResult
 
-          monthlyLoss={result.monthlyLoss}
+        <div ref={resultRef}>
 
-          yearlyLoss={result.yearlyLoss}
 
-          sessionId={result.sessionId}
+          <RevenueResult
 
-        />
+            monthlyLoss={result.monthlyLoss}
+
+            yearlyLoss={result.yearlyLoss}
+
+            sessionId={result.sessionId}
+
+          />
+
+
+        </div>
+
 
       )}
+
+
 
 
 
