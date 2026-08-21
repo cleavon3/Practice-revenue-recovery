@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 
-
 declare global {
 
   interface Window {
@@ -18,9 +17,7 @@ declare global {
 
 
 
-
 export default function ReportSuccessPage(){
-
 
 
   const [sessionId,setSessionId] = useState("");
@@ -28,9 +25,7 @@ export default function ReportSuccessPage(){
 
 
 
-
   useEffect(()=>{
-
 
 
     const params = new URLSearchParams(
@@ -40,9 +35,7 @@ export default function ReportSuccessPage(){
     );
 
 
-
     const id = params.get("session_id");
-
 
 
     setSessionId(id || "");
@@ -53,9 +46,7 @@ export default function ReportSuccessPage(){
     if(!id){
 
       console.log(
-
-        "❌ NO SESSION ID — SKIPPING TRACKING"
-
+        "NO SESSION ID"
       );
 
       return;
@@ -65,8 +56,7 @@ export default function ReportSuccessPage(){
 
 
 
-    // DUPLICATE-FIRE GUARD — prevents double-counting the same
-    // purchase if the page reloads or Stripe redirects twice
+
     const alreadyTracked = sessionStorage.getItem(
 
       `purchase_tracked_${id}`
@@ -77,17 +67,11 @@ export default function ReportSuccessPage(){
 
     if(alreadyTracked){
 
-
       console.log(
-
-        "⏭️ PURCHASE ALREADY TRACKED FOR THIS SESSION"
-
+        "PURCHASE ALREADY TRACKED"
       );
 
-
-
       return;
-
 
     }
 
@@ -95,19 +79,7 @@ export default function ReportSuccessPage(){
 
 
 
-
-
-    // META PURCHASE EVENT
-
     if(window.fbq){
-
-
-      console.log(
-
-        "🔥 META PURCHASE FIRED"
-
-      );
-
 
 
       window.fbq(
@@ -126,20 +98,15 @@ export default function ReportSuccessPage(){
 
         {
 
-          eventID: id
+          eventID:id
 
         }
 
       );
 
 
-    } else {
-
-
       console.log(
-
-        "❌ META PIXEL NOT AVAILABLE"
-
+        "META PURCHASE FIRED"
       );
 
 
@@ -149,20 +116,7 @@ export default function ReportSuccessPage(){
 
 
 
-
-
-
-    // GOOGLE ADS PURCHASE EVENT
-
     if(window.gtag){
-
-
-      console.log(
-
-        "🔥 GOOGLE PURCHASE FIRED"
-
-      );
-
 
 
       window.gtag(
@@ -174,36 +128,25 @@ export default function ReportSuccessPage(){
         {
 
           send_to:
-
-            "AW-10984592761/7728258379",
-
+          "AW-10984592761/7728258379",
 
           value:17.00,
 
-
           currency:"USD",
 
-
-          transaction_id: id
-
+          transaction_id:id
 
         }
 
       );
 
 
-    } else {
-
-
       console.log(
-
-        "❌ GOOGLE TAG NOT AVAILABLE"
-
+        "GOOGLE PURCHASE FIRED"
       );
 
 
     }
-
 
 
 
@@ -230,68 +173,11 @@ export default function ReportSuccessPage(){
 
 
 
-  async function handleBookingClick(){
+  function handleDemoClick(){
 
 
-
-    try {
-
-
-
-      await fetch(
-
-        "/api/track-booking",
-
-        {
-
-          method:"POST",
-
-          headers:{
-
-            "Content-Type":"application/json"
-
-          },
-
-          body:JSON.stringify({
-
-            sessionId
-
-          })
-
-        }
-
-      );
-
-
-
-    } catch(error){
-
-
-
-      console.error(
-
-        "Booking tracking error:",
-
-        error
-
-      );
-
-
-
-    }
-
-
-
-
-
-    window.open(
-
-      "https://calendly.com/cleavondigital/marketing-ai-growth-strategy-session",
-
-      "_blank"
-
-    );
-
+    window.location.href =
+      "/ai-receptionist-demo";
 
 
   }
@@ -302,173 +188,177 @@ export default function ReportSuccessPage(){
 
 
 
+return (
 
+<main>
 
-  return (
 
+<div className="container">
 
-    <main>
 
+<section className="report-success premium-success">
 
-      <div className="container">
 
 
-        <section className="report-success">
 
 
+<div className="success-badge">
 
-          <div className="success-badge">
+✓ Payment Successful
 
-            Payment Successful
+</div>
 
-          </div>
 
 
 
 
 
-          <h1>
+<h1>
 
-            Your Missed-Call Revenue Recovery Report
+Your Revenue Recovery Report Is Ready
 
-          </h1>
+</h1>
 
 
 
 
 
-          <p className="subtitle">
 
-            Your personalised revenue recovery analysis is ready.
-            Review the opportunities your practice may be missing
-            and the actions you can take.
 
-          </p>
+<p className="subtitle">
 
 
+Your personalised dental revenue assessment has been completed.
 
+Inside your report you will discover where missed calls may be costing your practice revenue and how these opportunities can be recovered.
 
 
+</p>
 
 
 
-          <div className="report-box">
 
 
-            <h2>
 
-              Your report includes:
 
-            </h2>
 
 
+<div className="report-box">
 
 
-            <ul>
+<h2>
 
+Your Report Includes
 
-              <li>
-                Full annual missed-call revenue projection
-              </li>
+</h2>
 
 
-              <li>
-                Industry benchmark comparison
-              </li>
 
+<ul>
 
-              <li>
-                Three specific recovery actions for your practice
-              </li>
 
+<li>
+Missed-call revenue opportunity analysis
+</li>
 
-              <li>
-                Revenue recovery scenario showing potential upside
-              </li>
 
+<li>
+Dental industry benchmark comparison
+</li>
 
-              <li>
-                AI receptionist opportunity assessment
-              </li>
 
+<li>
+Revenue recovery opportunities
+</li>
 
 
-            </ul>
+<li>
+Practical actions to improve patient capture
+</li>
 
 
-          </div>
+<li>
+AI receptionist solution assessment
+</li>
 
 
+</ul>
 
 
 
+</div>
 
 
 
 
-          <div className="cta-box">
 
 
-            <h2>
 
-              Ready to recover the missed revenue?
 
-            </h2>
 
+<div className="cta-box demo-next-box">
 
 
+<h2>
 
+Your Next Step: See The AI Receptionist In Action
 
-            <p>
+</h2>
 
-              Book a free strategy call to see how an AI receptionist
-              can help your practice capture missed patient enquiries
-              and convert more opportunities.
 
-            </p>
 
 
 
+<p>
 
 
+Your report identified the missed revenue opportunity.
 
+Now see how an AI receptionist answers calls, handles patient enquiries, books appointments, and helps dental practices recover lost opportunities.
 
-            <button
 
-              onClick={handleBookingClick}
+</p>
 
-              className="button-link"
 
-            >
 
-              Book Your Free Call
 
 
-            </button>
 
 
 
+<button
 
+onClick={handleDemoClick}
 
-          </div>
+className="demo-next-button"
 
+>
 
+Watch AI Receptionist Demo
 
+</button>
 
 
-        </section>
 
 
 
-      </div>
+</div>
 
 
 
-    </main>
 
 
-  );
 
+</section>
+
+
+</div>
+
+
+</main>
+
+
+);
 
 
 }

@@ -19,6 +19,16 @@ export async function createReport({
 
   try {
 
+    console.log(
+  "PDF DATA RECEIVED:",
+  lead
+);
+
+
+    console.log(
+  "PDF DATA RECEIVED:",
+  lead
+);
 
     const document = RevenueReportPDF({
 

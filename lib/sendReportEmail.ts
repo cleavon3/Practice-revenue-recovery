@@ -2,27 +2,38 @@ export async function sendReportEmail({
 
   email,
 
+  practiceName,
+
   monthlyLoss,
 
   yearlyLoss,
 
   pdfBuffer
 
+
 }: {
 
   email:string;
+
+  practiceName:string;
 
   monthlyLoss:number;
 
   yearlyLoss:number;
 
-  pdfBuffer: Buffer;
+  pdfBuffer:Buffer;
 
 
 }) {
 
 
-  const pdfBase64 = pdfBuffer.toString("base64");
+
+  const pdfBase64 =
+
+    pdfBuffer.toString("base64");
+
+
+
 
 
 
@@ -56,6 +67,7 @@ export async function sendReportEmail({
       body:JSON.stringify({
 
 
+
         sender:{
 
 
@@ -63,7 +75,7 @@ export async function sendReportEmail({
 
             process.env.BREVO_SENDER_NAME ||
 
-            "Cleavon Digital",
+            "Skill Digital Solutions",
 
 
 
@@ -71,7 +83,10 @@ export async function sendReportEmail({
 
             process.env.BREVO_SENDER_EMAIL
 
+
         },
+
+
 
 
 
@@ -87,9 +102,14 @@ export async function sendReportEmail({
 
 
 
+
+
         subject:
 
-          "Your Missed-Call Revenue Recovery Report",
+
+          "Your Dental Revenue Recovery Audit Is Ready",
+
+
 
 
 
@@ -97,114 +117,220 @@ export async function sendReportEmail({
         htmlContent:`
 
 
-        <div
 
-        style="
+<div
 
-        font-family:Arial;
+style="
 
-        padding:30px;
+font-family:Arial,Helvetica,sans-serif;
 
-        "
+padding:30px;
 
-        >
+color:#111827;
 
+"
 
+>
 
-        <h2>
 
-        Your Revenue Recovery Report Is Ready
 
-        </h2>
+<h2>
 
+Your Revenue Recovery Audit Is Ready
 
+</h2>
 
 
-        <p>
 
-        Your personalised missed-call revenue
+<p>
 
-        recovery analysis has been completed.
+Hello,
 
-        </p>
+</p>
 
 
 
+<p>
 
-        <h2>
+Your personalised missed-call revenue recovery audit for
 
-        Monthly Opportunity:
+<strong>
 
-        $${monthlyLoss.toLocaleString()}
+${practiceName}
 
-        </h2>
+</strong>
 
+has been completed.
 
+</p>
 
 
-        <h2>
 
-        Annual Opportunity:
 
-        $${yearlyLoss.toLocaleString()}
 
-        </h2>
+<p>
 
+Your assessment identified a potential revenue opportunity of:
 
+</p>
 
 
-        <p>
 
-        Your complete PDF report is attached.
 
-        </p>
 
+<h2>
 
+$${monthlyLoss.toLocaleString()}
 
+per month
 
-        <p>
+</h2>
 
-        Ready to recover missed revenue?
 
-        Book your AI Receptionist Strategy Call.
 
-        </p>
+<h2>
 
+$${yearlyLoss.toLocaleString()}
 
+per year
 
-        <a
+</h2>
 
-        href="https://calendly.com/cleavondigital/marketing-ai-growth-strategy-session"
 
-        style="
 
-        display:inline-block;
 
-        padding:12px 20px;
 
-        background:#111827;
+<p>
 
-        color:white;
+Your detailed report explains:
 
-        text-decoration:none;
+</p>
 
-        border-radius:6px;
 
-        "
 
-        >
+<ul>
 
-        Book Strategy Call
+<li>
 
-        </a>
+Where revenue opportunities may be getting lost
 
+</li>
 
 
+<li>
 
-        </div>
+How your practice compares with industry benchmarks
 
+</li>
 
-        `,
+
+<li>
+
+Actions you can take to improve patient conversion
+
+</li>
+
+
+<li>
+
+How AI-powered call handling can support recovery
+
+</li>
+
+
+</ul>
+
+
+
+
+
+<p>
+
+Your Revenue Recovery Audit is attached to this email.
+
+</p>
+
+
+
+
+
+<p>
+
+After reviewing your report, see how an AI receptionist can help capture missed patient opportunities:
+
+</p>
+
+
+
+
+
+<a
+
+href="https://YOUR-DOMAIN.com/ai-receptionist-demo"
+
+style="
+
+display:inline-block;
+
+padding:12px 20px;
+
+background:#111827;
+
+color:#ffffff;
+
+text-decoration:none;
+
+border-radius:6px;
+
+"
+
+>
+
+Watch AI Receptionist Demo
+
+</a>
+
+
+
+
+
+<p
+
+style="margin-top:30px"
+
+>
+
+Prepared by:
+
+<br/>
+
+<strong>
+
+Cleavon A
+
+</strong>
+
+<br/>
+
+Founder & AI Revenue Recovery Consultant
+
+<br/>
+
+Skill Digital Solutions
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+`,
+
+
 
 
 
@@ -220,13 +346,14 @@ export async function sendReportEmail({
 
             name:
 
-              "Missed-Call-Revenue-Recovery-Report.pdf"
+              "Dental-Revenue-Recovery-Audit.pdf"
 
 
           }
 
 
         ]
+
 
 
       })
@@ -236,6 +363,7 @@ export async function sendReportEmail({
 
 
   );
+
 
 
 
@@ -271,7 +399,9 @@ export async function sendReportEmail({
 
 
 
+
   const result = await response.json();
+
 
 
 
@@ -285,7 +415,10 @@ export async function sendReportEmail({
 
 
 
+
+
   return result;
+
 
 
 }

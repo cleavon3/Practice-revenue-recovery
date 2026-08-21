@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createReport } from "@/lib/createReport";
+import fs from "fs";
+import path from "path";
 
 
 export async function GET() {
@@ -14,9 +16,11 @@ export async function GET() {
 
       lead:{
 
-        lost_revenue_monthly:7000,
+        practice_name:"Bright Smile Dental",
 
-        lost_revenue_yearly:84000
+        lost_revenue_monthly:28000,
+
+        lost_revenue_yearly:336000
 
       }
 
@@ -24,13 +28,67 @@ export async function GET() {
 
 
 
-    console.log(
 
-      "CREATE REPORT RESULT:",
+    const reportsFolder = path.join(
 
-      result
+      process.cwd(),
+
+      "public",
+
+      "reports"
 
     );
+
+
+
+    if(!fs.existsSync(reportsFolder)){
+
+      fs.mkdirSync(
+
+        reportsFolder,
+
+        {
+          recursive:true
+        }
+
+      );
+
+    }
+
+
+
+
+    const filePath = path.join(
+
+      reportsFolder,
+
+      "report-test-12345.pdf"
+
+    );
+
+
+
+    fs.writeFileSync(
+
+      filePath,
+
+      result.pdfBuffer
+
+    );
+
+
+
+
+
+    console.log(
+
+      "PDF SAVED:",
+
+      filePath
+
+    );
+
+
 
 
 
@@ -38,15 +96,16 @@ export async function GET() {
 
       success:true,
 
-      resultType:typeof result,
+      file:
 
-      result
+        "/reports/report-test-12345.pdf"
 
     });
 
 
 
-  } catch(error) {
+
+  } catch(error){
 
 
     console.error(
@@ -56,7 +115,6 @@ export async function GET() {
       error
 
     );
-
 
 
     return NextResponse.json(

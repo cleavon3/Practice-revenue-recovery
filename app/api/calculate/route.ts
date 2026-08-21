@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
+
 import { generateRevenueReport } from "@/lib/reportGenerator";
 import { createSessionId } from "@/lib/session";
 import { supabase } from "@/lib/supabase";
+
+
+console.log(
+  "✅ CALCULATE ROUTE REGISTERED"
+);
+
 
 
 export async function POST(request: Request) {
@@ -16,31 +23,62 @@ export async function POST(request: Request) {
 
     const {
 
+      practiceName,
+
       callVolume,
 
       missedPercent,
 
       patientValue
 
+
     } = body;
+
+
+
+
+
+    if(!practiceName){
+
+      return NextResponse.json(
+
+        {
+          error:"Practice name is required"
+        },
+
+        {
+          status:400
+        }
+
+      );
+
+    }
+
 
 
 
 
     const report = generateRevenueReport({
 
-      callVolume: Number(callVolume),
+      callVolume:Number(callVolume),
 
-      missedPercent: Number(missedPercent),
+      missedPercent:Number(missedPercent),
 
-      patientValue: Number(patientValue)
+      patientValue:Number(patientValue)
 
     });
 
 
 
 
+
+
+
     const sessionId = createSessionId();
+
+
+
+
 
 
 
@@ -51,34 +89,59 @@ export async function POST(request: Request) {
 
       .insert({
 
-        session_id: sessionId,
 
-        call_volume: Number(callVolume),
+        session_id:sessionId,
 
-        missed_percent: Number(missedPercent),
 
-        avg_patient_value: Number(patientValue),
+        practice_name:practiceName,
 
-        lost_revenue_monthly: report.monthlyLoss,
 
-        lost_revenue_yearly: report.yearlyLoss,
+        call_volume:Number(callVolume),
 
-        calculator_completed: true,
 
-        report_purchased: false,
+        missed_percent:Number(missedPercent),
 
-        email_captured: false,
 
-        booking_cta_clicked: false,
+        avg_patient_value:Number(patientValue),
 
-        industry: "dental"
+
+
+        lost_revenue_monthly:
+
+          report.monthlyLoss,
+
+
+
+        lost_revenue_yearly:
+
+          report.yearlyLoss,
+
+
+
+        calculator_completed:true,
+
+
+        report_purchased:false,
+
+
+        email_captured:false,
+
+
+        booking_cta_clicked:false,
+
+
+        industry:"dental"
+
 
       });
 
 
 
 
-    if (error) {
+
+
+
+    if(error){
 
 
       console.error(
@@ -88,6 +151,7 @@ export async function POST(request: Request) {
         error
 
       );
+
 
 
       return NextResponse.json(
@@ -113,11 +177,25 @@ export async function POST(request: Request) {
 
 
 
+
+
+
+
     console.log(
 
       "LEAD CREATED:",
 
       sessionId
+
+    );
+
+
+
+    console.log(
+
+      "PRACTICE NAME:",
+
+      practiceName
 
     );
 
@@ -134,18 +212,35 @@ export async function POST(request: Request) {
 
 
 
+
+
+
+
+
     return NextResponse.json({
+
 
       ...report,
 
+
+      practiceName,
+
+
       sessionId
+
+
 
     });
 
 
 
 
-  } catch(error) {
+
+
+
+
+  } catch(error){
+
 
 
     console.error(
