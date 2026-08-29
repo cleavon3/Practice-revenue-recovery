@@ -1,228 +1,69 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 
-
 export async function POST(request: Request) {
-
-
-  console.log(
-    "🔥 CREATE CHECKOUT ROUTE HIT"
-  );
-
+  console.log("🔥 CREATE CHECKOUT ROUTE HIT");
 
   try {
-
-
-    const {
-      sessionId
-
-    } = await request.json();
-
-
-
-
+    const { sessionId } = await request.json();
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-    const priceId = process.env.STRIPE_PRICE_ID;
+    // $27 Revenue Recovery Report price
+    const priceId = process.env.STRIPE_REPORT_PRICE_ID;
 
+    console.log("REPORT PRICE ID FROM ENV:", priceId);
+    console.log("APP URL:", appUrl);
 
-
-
-
-    console.log(
-      "PRICE ID FROM ENV:",
-      priceId
-    );
-
-
-
-    console.log(
-      "APP URL:",
-      appUrl
-    );
-
-
-
-
-
-    if(!appUrl){
-
-      throw new Error(
-        "NEXT_PUBLIC_APP_URL is missing"
-      );
-
+    if (!appUrl) {
+      throw new Error("NEXT_PUBLIC_APP_URL is missing");
     }
 
-
-
-
-    if(!priceId){
-
-      throw new Error(
-        "STRIPE_PRICE_ID is missing"
-      );
-
+    if (!priceId) {
+      throw new Error("STRIPE_REPORT_PRICE_ID is missing");
     }
-
-
-
-
-
-
-
 
     const checkoutSession = await stripe.checkout.sessions.create({
+      mode: "payment",
 
+      customer_creation: "always",
 
-      mode:"payment",
-
-
-
-      customer_creation:"always",
-
-
-
-
-
-      line_items:[
-
+      line_items: [
         {
-
           price: priceId,
-
-          quantity:1
-
-        }
-
+          quantity: 1,
+        },
       ],
 
-
-
-
-
-      metadata:{
-
-
-        sessionId: sessionId || ""
-
-
+      metadata: {
+        sessionId: sessionId || "",
       },
 
+      success_url: `${appUrl}/report-success?session_id=${sessionId}`,
 
-
-
-
-
-      success_url:
-
-        `${appUrl}/report-success?session_id=${sessionId}`,
-
-
-
-
-
-      cancel_url:
-
-        appUrl
-
-
-
-
-
+      cancel_url: appUrl,
     });
 
+    console.log("STRIPE CREATED SESSION:", checkoutSession.id);
 
-
-
-
-
-
-
-
-    console.log(
-
-      "STRIPE CREATED SESSION:",
-
-      checkoutSession.id
-
-    );
-
-
-
-
-
-    console.log(
-
-      "STRIPE METADATA:",
-
-      checkoutSession.metadata
-
-    );
-
-
-
-
-
+    console.log("STRIPE METADATA:", checkoutSession.metadata);
 
     return NextResponse.json({
-
-      url: checkoutSession.url
-
+      url: checkoutSession.url,
     });
+  } catch (error: any) {
+    console.error("CHECKOUT ERROR MESSAGE:", error?.message);
 
-
-
-
-
-
-
-  } catch(error:any){
-
-
-
-    console.error(
-
-      "CHECKOUT ERROR MESSAGE:",
-
-      error?.message
-
-    );
-
-
-
-    console.error(
-
-      "CHECKOUT ERROR FULL:",
-
-      error
-
-    );
-
-
-
-
+    console.error("CHECKOUT ERROR FULL:", error);
 
     return NextResponse.json(
-
       {
-
-        error:"Checkout failed",
-
-        message:error?.message
-
+        error: "Checkout failed",
+        message: error?.message,
       },
-
       {
-
-        status:500
-
-      }
-
+        status: 500,
+      },
     );
-
-
   }
-
-
 }
