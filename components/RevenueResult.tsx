@@ -11,6 +11,16 @@ type RevenueResultProps = {
   sessionId: string;
 };
 
+declare global {
+  interface Window {
+    gtag?: (
+      command: string,
+      eventName: string,
+      parameters?: Record<string, unknown>,
+    ) => void;
+  }
+}
+
 export default function RevenueResult({
   monthlyLoss,
   yearlyLoss,
@@ -28,13 +38,10 @@ export default function RevenueResult({
     /*
      * Meta Pixel
      *
-     * Window.fbq is declared globally elsewhere.
-     * We intentionally do not redeclare it here because
-     * duplicate declarations cause TypeScript conflicts
-     * during the Vercel build.
+     * fbq is already declared globally elsewhere.
      */
 
-    if (typeof window !== "undefined" && window.fbq) {
+    if (window.fbq) {
       window.fbq("trackCustom", "calculator_completed", {
         monthly_loss: monthlyLoss,
         yearly_loss: yearlyLoss,
@@ -45,11 +52,9 @@ export default function RevenueResult({
 
     /*
      * Google Ads
-     *
-     * Window.gtag is also declared globally elsewhere.
      */
 
-    if (typeof window !== "undefined" && window.gtag) {
+    if (window.gtag) {
       window.gtag("event", "calculator_completed", {
         monthly_loss: monthlyLoss,
         yearly_loss: yearlyLoss,

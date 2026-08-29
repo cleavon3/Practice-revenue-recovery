@@ -1,4 +1,13 @@
+"use client";
+
 export default function HowItWorks() {
+  function scrollToAssessment() {
+    document.getElementById("assessment")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
   return (
     <section className="bg-white">
       <div className="container mx-auto px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
@@ -24,8 +33,6 @@ export default function HowItWorks() {
           {/* Steps */}
 
           <div className="relative mt-14">
-            {/* Desktop connector */}
-
             <div
               aria-hidden="true"
               className="absolute left-[16.66%] right-[16.66%] top-7 hidden h-px bg-[#dce7ea] lg:block"
@@ -72,12 +79,7 @@ export default function HowItWorks() {
 
               <button
                 type="button"
-                onClick={() =>
-                  document.getElementById("assessment")?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  })
-                }
+                onClick={scrollToAssessment}
                 className="
                   inline-flex
                   shrink-0
@@ -122,13 +124,9 @@ function Step({
 }) {
   return (
     <div className="relative text-center">
-      {/* Number */}
-
       <div className="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-full border-4 border-white bg-[#0F7490] text-sm font-bold text-white shadow-md">
         {number}
       </div>
-
-      {/* Content */}
 
       <div className="mt-6 rounded-2xl border border-[#e3e9ec] bg-white p-6 shadow-sm">
         <h3 className="text-lg font-bold text-[#172033]">{title}</h3>
