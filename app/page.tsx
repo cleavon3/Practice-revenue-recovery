@@ -9,22 +9,47 @@ import AIReceptionistCTA from "@/components/landing/AIReceptionistCTA";
 
 export default function Home() {
   return (
-    <main>
-      <div className="container">
-        <Header />
+    <main className="min-h-screen bg-white">
+      <Header />
 
-        <HeroSection />
+      {/* =====================================================
+          HERO
+          Primary job: get visitors into the assessment
+      ===================================================== */}
 
-        <div id="assessment">
+      <HeroSection />
+
+      {/* =====================================================
+          REVENUE RECOVERY ASSESSMENT
+      ===================================================== */}
+
+      <section
+        id="assessment"
+        className="scroll-mt-24 bg-[#f8fafb] py-16 sm:py-20"
+      >
+        <div className="container mx-auto px-4 sm:px-6">
           <AssessmentContainer />
         </div>
+      </section>
 
-        <TrustSection />
+      {/* =====================================================
+          TRUST / CREDIBILITY
+      ===================================================== */}
 
-        <HowItWorks />
+      <TrustSection />
 
-        <AIReceptionistCTA />
-      </div>
+      {/* =====================================================
+          HOW IT WORKS
+      ===================================================== */}
+
+      <HowItWorks />
+
+      {/* =====================================================
+          AI RECEPTIONIST
+          Position this as the solution, not the initial offer.
+      ===================================================== */}
+
+      <AIReceptionistCTA />
     </main>
   );
 }
