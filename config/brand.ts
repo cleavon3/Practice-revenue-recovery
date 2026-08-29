@@ -1,17 +1,10 @@
 export const BRAND = {
-  name: "Dental Revenue Recovery",
-
-  headline:
-    "How much revenue are missed calls costing your practice?",
-
+  name: "Revenue Recovery",
+  headline: "How much revenue could missed enquiries be costing your practice?",
   description:
-    "Calculate your estimated lost revenue from missed patient calls.",
-
+    "Calculate your estimated revenue opportunity from missed patient enquiries.",
   primaryColor: "#0B6E8E",
-
   secondaryColor: "#E8F5F8",
-
-  reportPrice: "$17",
-
+  reportPrice: "$27",
   supportEmail: "cleavondigital@gmail.com",
 };

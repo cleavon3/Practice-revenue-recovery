@@ -2,48 +2,26 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 
-
 export const metadata: Metadata = {
-
-  title: "Dental Revenue Recovery",
-
+  title: "Revenue Recovery Calculator",
   description:
-    "Recover missed dental revenue with AI receptionist systems"
-
+    "Calculate the potential revenue opportunity from missed patient enquiries.",
 };
 
-
-
 export default function RootLayout({
-
   children,
-
 }: Readonly<{
-
   children: React.ReactNode;
-
 }>) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
 
+        {/* Meta Pixel */}
 
-return (
-
-<html lang="en">
-
-<body>
-
-
-{children}
-
-
-
-{/* Meta Pixel */}
-
-<Script
-id="meta-pixel"
-strategy="afterInteractive"
->
-
-{`
+        <Script id="meta-pixel" strategy="afterInteractive">
+          {`
 
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function()
@@ -72,30 +50,17 @@ fbq('init',
 fbq('track','PageView');
 
 `}
+        </Script>
 
-</Script>
+        {/* Google Ads Tag */}
 
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID}`}
+          strategy="afterInteractive"
+        />
 
-
-
-
-{/* Google Ads Tag */}
-
-<Script
-
-src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID}`}
-
-strategy="afterInteractive"
-
-/>
-
-
-<Script
-id="google-ads"
-strategy="afterInteractive"
->
-
-{`
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
 
 window.dataLayer = window.dataLayer || [];
 
@@ -112,16 +77,8 @@ gtag(
 );
 
 `}
-
-</Script>
-
-
-
-
-</body>
-
-</html>
-
-);
-
+        </Script>
+      </body>
+    </html>
+  );
 }
