@@ -7,17 +7,20 @@ export async function POST(request: Request) {
   try {
     const { sessionId } = await request.json();
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    // Prefer the configured app URL.
+    // Fall back to the domain that made the request.
+    const configuredAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const requestOrigin = new URL(request.url).origin;
+
+    const appUrl = configuredAppUrl || requestOrigin;
 
     // $27 Revenue Recovery Report price
     const priceId = process.env.STRIPE_REPORT_PRICE_ID;
 
     console.log("REPORT PRICE ID FROM ENV:", priceId);
-    console.log("APP URL:", appUrl);
-
-    if (!appUrl) {
-      throw new Error("NEXT_PUBLIC_APP_URL is missing");
-    }
+    console.log("CONFIGURED APP URL:", configuredAppUrl);
+    console.log("REQUEST ORIGIN:", requestOrigin);
+    console.log("FINAL APP URL:", appUrl);
 
     if (!priceId) {
       throw new Error("STRIPE_REPORT_PRICE_ID is missing");
@@ -45,7 +48,6 @@ export async function POST(request: Request) {
     });
 
     console.log("STRIPE CREATED SESSION:", checkoutSession.id);
-
     console.log("STRIPE METADATA:", checkoutSession.metadata);
 
     return NextResponse.json({
@@ -53,7 +55,6 @@ export async function POST(request: Request) {
     });
   } catch (error: any) {
     console.error("CHECKOUT ERROR MESSAGE:", error?.message);
-
     console.error("CHECKOUT ERROR FULL:", error);
 
     return NextResponse.json(

@@ -46,8 +46,6 @@ export async function POST(request: Request) {
           organization: CALENDLY_ORGANIZATION_URI,
 
           scope: "organization",
-
-          signing_key: process.env.CALENDLY_WEBHOOK_SIGNING_KEY || undefined,
         }),
       },
     );
